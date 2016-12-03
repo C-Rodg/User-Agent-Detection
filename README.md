@@ -1,4 +1,4 @@
-# User-Agent-Detection
+# User-Agent Detection
 A javascript user-agent detection script.
 
 ## Contributors
