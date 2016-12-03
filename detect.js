@@ -48,7 +48,29 @@ const detect = function(){
 		engine.ver = browser.ver = window.opera.version();
 		engine.opera = browser.opera = parseFloat(engine.ver);
 	} else if (/AppleWebKit\/(\S+)/.test(ua)) {
+		engine.ver = RegExp["$1"];
+		engine.webkit = parseFloat(engine.ver);
 
+		if (/Chrome\/(\S+)/.test(ua)) {
+			browser.ver = RegExp["$1"];
+			browser.chrome = parseFloat(browser.ver);
+		} else if (/Version\/(\S+)/.test(ua)) {
+			browser.ver = RegExp["$1"];
+			browser.safari = parseFloat(browser.ver);
+		} else {
+			let safariVersion = 1;
+			if (engine.webkit < 100) {
+				safariVersion = 1;
+			} else if (engine.webkit < 312) {
+				safariVersion = 1.2;
+			} else if (engine.webkit < 412) {
+				safariVersion = 1.3;
+			} else {
+				safariVersion = 2;
+			}
+
+			browser.safari = browser.ver = safariVersion;
+		}
 	} else if (/KHTML\/(\S+)/.test(ua) || /Konqueror\/([^;]+)/.test(ua)) {
 
 	} else if (/rv:([^\)]+)\) Gecko\/\d{8}/.test(ua)) {
@@ -58,6 +80,12 @@ const detect = function(){
 	}
 
 	// Browser Detection
+	browser.ie = engine.ie;
+	browser.opera = engine.opera;
+
+	// System Detection
+	let plat = navigator.platform;
+	system.win = plat.indexOf('Win') == 0;
 }();
 
 export default detect;
