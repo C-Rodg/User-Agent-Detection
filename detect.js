@@ -72,11 +72,19 @@ const detect = function(){
 			browser.safari = browser.ver = safariVersion;
 		}
 	} else if (/KHTML\/(\S+)/.test(ua) || /Konqueror\/([^;]+)/.test(ua)) {
-
+		engine.ver = browser.ver = RegExp["$1"];
+		engine.khtml = browser.konq = parseFloat(engine.ver);
 	} else if (/rv:([^\)]+)\) Gecko\/\d{8}/.test(ua)) {
+		engine.ver = RegExp["$1"];
+		engine.gecko = parseFloat(engine.ver);
 
+		if (/Firefox\/(\S+)/.test(ua)) {
+			browser.ver = RegExp["$1"];
+			browser.firefox = parseFloat(browser.ver);
+		}
 	} else if (/MSIE ([^;]+)/.test(ua)) {
-
+		engine.ver = browser.ver = RegExp["$1"];
+		engine.ie = browser.ie = parseFloat(engine.ver);
 	}
 
 	// Browser Detection
