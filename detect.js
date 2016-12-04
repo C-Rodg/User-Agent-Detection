@@ -12,7 +12,7 @@ const detect = function(){
 	};
 
 	// Browsers
-	let browsers = {
+	let browser = {
 		chrome : 0,
 		firefox : 0,
 		ie : 0,
@@ -93,7 +93,75 @@ const detect = function(){
 
 	// System Detection
 	let plat = navigator.platform;
+	system.mac = plat.indexOf('Mac') == 0;
 	system.win = plat.indexOf('Win') == 0;
+	system.x11 = (plat == 'X11') || (plat.indexOf("Linux") == 0);
+
+	if (system.win) {
+		if (/Win(?:dows )?([^do]{2})\s?(\d+\.\d+)?/.test(ua)) {
+			if (RegExp["$1"] == "NT") {
+				switch(RegExp["$2"]){
+					case "5.0":
+						system.win = "2000";
+						break;
+					case "5.1":
+						system.win = "XP";
+						break;
+					case "6.0":
+						system.win = "Vista";
+						break;
+					case "6.1":
+						system.win = "7";
+						break;
+					default:
+						system.win = "NT";
+						break;
+				}
+			} else if (RegExp["$1"] == "9x") {
+				system.win = "ME";
+			} else {
+				system.win = RegExp["$1"];
+			}
+		}
+	}
+
+	// Mobile 
+	system.iphone = ua.indexOf("iPhone") > -1;
+	system.ipod = ua.indexOf("iPod") > -1;
+	system.ipad = ua.indexOf("iPad") > -1;
+	system.nokiaN = ua.indexOf("NokiaN") > -1;
+
+	if (system.win == "CE") {
+		system.winMobile = system.win;
+	} else if (system.win == "Ph") {
+		if (/Windows Phone OS (\d+.\d+)/.test(ua)) {
+			system.win = "Phone";
+			system.winMobile = parseFloat(RegExp["$1"]);
+		}
+	}
+
+	if (system.mac && ua.indexOf("Mobile") > -1) {
+		if (/CPU (?:iPhone ) ?OS (\d+_\d+)/.test(ua)) {
+			system.ios = parseFloat(RegExp.$1.replace("_", "."));
+		} else {
+			system.ios = 2;
+		}
+	}
+
+	if (/Android (\d+\.\d+)/.test(ua)) {
+		system.android = parseFloat(RegExp.$1);
+	}
+
+	// Gaming Systems
+	system.wii = ua.indexOf("Wii") > -1;
+	system. ps = /playstation/i.test(ua);
+
+	return {
+		engine : engine,
+		browser : browser,
+		system : system
+	};
+
 }();
 
 export default detect;
